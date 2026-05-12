@@ -1,0 +1,12 @@
+# Swift / SwiftPM
+.build/
+.swiftpm/
+*.xcodeproj/
+Package.resolved
+
+# Build artifacts
+ClaudePet-bin
+ClaudePet.app/
+
+# macOS
+.DS_Store
