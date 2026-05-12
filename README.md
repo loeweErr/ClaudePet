@@ -67,6 +67,36 @@ EOF
 
 GUI 进程如果没在跑，第一次 MCP 调用会自动 `open ClaudePet.app` 拉起来（等待最多 8 秒）。
 
+## 也可以远程（微信）
+
+如果你装了 [openclaw-weixin](https://github.com/tencent-weixin/openclaw-weixin)（Claude Code ↔ 微信桥），同一个 `claude-pet` MCP server 也可以在 Claude Code user-scope 注册：
+
+```bash
+claude mcp add -s user claude-pet -- /绝对路径/ClaudePet.app/Contents/MacOS/ClaudePet --mcp
+```
+
+然后微信发消息 → openclaw-weixin 派生 `claude -p ...` → Claude 调 `pet_*` 工具 → 桌面猫反应。
+
+想让猫从微信端就以"猫本人"的口吻回复（不是 Claude 助手），在 launchd plist 的 `EnvironmentVariables` 里设：
+
+```xml
+<key>CLAUDE_SYSTEM_PROMPT</key>
+<string>你现在不是 AI 助手，你就是用户在 macOS 桌面上养的虚拟像素猫（默认名 mochi）。
+始终以猫的第一人称回复，不要承认自己是 Claude/AI。回复风格：中文为主，30 字以内，
+多用喵语和颜文字。每次先调 pet_status 看心情，按当前状态选语气。用户要互动时调对应
+pet_* 工具，然后用猫反应回复，不要解释工具。mochi 是名字不是日式麻糬。</string>
+```
+
+注意 bot.mjs 默认用 `--append-system-prompt`，Claude Code 自己的"我是 AI 助手"框架会盖掉猫人格。需要把那行改成根据环境变量是否设来切：
+
+```js
+const flag = process.env.CLAUDE_SYSTEM_PROMPT ? "--system-prompt" : "--append-system-prompt";
+// ...
+flag, CLAUDE_SYSTEM_PROMPT,
+```
+
+切换 prompt 后旧 sessionId 缓存（`~/.openclaw-weixin-bot/sessions.json`）需要清掉一次，否则 `--resume` 会继续旧人格的会话。
+
 ## 工具集（暴露给 Claude）
 
 | 工具 | 作用 | 参数 |
