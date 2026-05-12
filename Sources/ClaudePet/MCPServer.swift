@@ -255,7 +255,7 @@ final class MCPServer {
 
 private enum Tools {
     static let names: Set<String> = [
-        "pet_status", "pet_say", "pet_feed", "pet_pet", "pet_play",
+        "pet_status", "pet_say", "pet_meow", "pet_feed", "pet_pet", "pet_play",
         "pet_wave", "pet_sleep", "pet_wake", "pet_emote",
     ]
 
@@ -267,14 +267,25 @@ private enum Tools {
         ],
         [
             "name": "pet_say",
-            "description": "Display a short speech bubble above the on-screen desktop cat pet. Use to relay short messages to the user through the cat. Keep text under ~40 characters for best display.",
+            "description": "Display a short speech bubble above the on-screen desktop cat pet AND speak the text aloud through macOS TTS in a catty voice (high pitch). Use to relay short messages through the cat. Keep text under ~40 characters for best display + audio.",
             "inputSchema": [
                 "type": "object",
                 "properties": [
-                    "text": ["type": "string", "description": "Text to display in the speech bubble."],
+                    "text": ["type": "string", "description": "Text to display in the speech bubble and speak aloud."],
                     "duration": ["type": "number", "description": "Seconds to keep the bubble visible (default 3.0)."],
+                    "silent": ["type": "boolean", "description": "If true, only show the bubble without speaking aloud (default false)."],
                 ],
                 "required": ["text"],
+            ],
+        ],
+        [
+            "name": "pet_meow",
+            "description": "Make the on-screen desktop cat meow audibly through macOS TTS. With no text, plays a random short meow (喵~/喵呜/mrrr~). With text, speaks that text aloud in the catty voice AND shows it as a bubble. Use sparingly for emphasis or greeting.",
+            "inputSchema": [
+                "type": "object",
+                "properties": [
+                    "text": ["type": "string", "description": "Optional text to speak. If omitted, plays a random short meow sound."],
+                ],
             ],
         ],
         [

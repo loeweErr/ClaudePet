@@ -10,6 +10,7 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
     let menuBar: MenuBarController
     private var statusMode: StatusMode = .idle
     private let ipcServer = IPCServer()
+    private let audio = PetAudio()
 
     // Timers
     private var taskTimers: [Timer] = []
@@ -122,11 +123,14 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
 
     // MARK: - Speech bubble
 
-    private func say(_ text: String, duration: TimeInterval = 2.2) {
+    private func say(_ text: String, duration: TimeInterval = 2.2, voice: Bool = true) {
         view.bubbleText = text
         bubbleClearTimer?.invalidate()
         bubbleClearTimer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
             self?.view.bubbleText = nil
+        }
+        if voice {
+            audio.speak(text, catty: true)
         }
     }
 
@@ -568,9 +572,20 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         case "pet_say":
             let text = (params["text"] as? String) ?? ""
             let duration = (params["duration"] as? Double) ?? 3.0
+            let silent = (params["silent"] as? Bool) ?? false
             guard !text.isEmpty else { return "error: missing 'text'" }
-            say(text, duration: duration)
-            return "OK · \(state.name) is saying: \(text)"
+            say(text, duration: duration, voice: !silent)
+            return "OK · \(state.name) is saying: \(text)\(silent ? " (silent)" : "")"
+        case "pet_meow":
+            let text = (params["text"] as? String) ?? ""
+            if text.isEmpty {
+                audio.meow()
+                view.emit(.note, count: 2, life: 1.0)
+                return "OK · \(state.name) meowed"
+            } else {
+                say(text, duration: 3.0, voice: true)
+                return "OK · \(state.name) meowed: \(text)"
+            }
         case "pet_feed":
             feed()
             return "OK · fed \(state.name). hunger=\(Int(state.mood.hunger))/100"

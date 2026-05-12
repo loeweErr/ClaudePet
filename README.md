@@ -31,8 +31,9 @@ swiftc -O -target arm64-apple-macos13 \
   -o ClaudePet-bin Sources/ClaudePet/*.swift
 
 # 打成 .app
-mkdir -p ClaudePet.app/Contents/MacOS
+mkdir -p ClaudePet.app/Contents/MacOS ClaudePet.app/Contents/Resources
 cp ClaudePet-bin ClaudePet.app/Contents/MacOS/ClaudePet
+cp Resources/meow.m4a ClaudePet.app/Contents/Resources/meow.m4a
 cat > ClaudePet.app/Contents/Info.plist <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -102,7 +103,8 @@ flag, CLAUDE_SYSTEM_PROMPT,
 | 工具 | 作用 | 参数 |
 |---|---|---|
 | `pet_status` | 返回当前情绪 / 共度天数 / 羁绊等级 | — |
-| `pet_say` | 让猫显示气泡 | `text` (必), `duration` |
+| `pet_say` | 让猫显示气泡 + macOS TTS 念出来（猫式音色） | `text` (必), `duration`, `silent` |
+| `pet_meow` | 桌面播一段真实猫叫录音（CC0 暹罗猫 .m4a） | `text` (可选, 有则改为 TTS 念这段) |
 | `pet_feed` | 喂零食（饥饱 +26 或 +8） | — |
 | `pet_pet` | 撸猫（心情 +9，羁绊 +0.6） | — |
 | `pet_play` | 陪它玩（心情 +14，精力 -10） | — |
@@ -159,7 +161,11 @@ ClaudePet/
 ## 不在这一版里
 
 - 多种皮肤（v2 设计预留，v3 仍只有橙色猫）
-- 声音
+- 远程语音回复（桌面有声，但微信 outbound 没接 voice 通道）
 - 全局热键
 - Login at startup（手动 `~/Library/LaunchAgents` 可以）
 - 流式 / 多媒体回复展示
+
+## Credits
+
+- `Resources/meow.m4a` — 改编自 Wikimedia Commons "Meow of a Siamese cat - freemaster2.wav"（[link](https://commons.wikimedia.org/wiki/File:Meow_of_a_Siamese_cat_-_freemaster2.wav)），CC0/公有领域，原始 134KB WAV 经 `afconvert` 压成 15KB AAC
