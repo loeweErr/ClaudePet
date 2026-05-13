@@ -1,0 +1,36 @@
+title: "[晒猫] "
+labels: ["show-cat"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎来到 **晒猫**！秀一下你的桌面和你养的 mochi（或其他名字）。
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 截图 / 录屏
+      description: 拖拽图片或视频到这里
+      placeholder: "把猫的桌面截图丢进来"
+    validations:
+      required: true
+
+  - type: input
+    id: skin
+    attributes:
+      label: 用的什么皮肤?
+      placeholder: "mochi / shadow / snow / 自己改的 palette"
+
+  - type: input
+    id: days
+    attributes:
+      label: 一起多少天了?
+      description: 状态面板可以看到
+      placeholder: "day 42"
+
+  - type: textarea
+    id: story
+    attributes:
+      label: 故事
+      description: 这只猫给你带来了什么改变？
+      placeholder: "用了之后我的番茄钟坚持率从 30% 变成 70%，因为不想吵醒它。"

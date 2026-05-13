@@ -1,0 +1,38 @@
+title: "[recipe] "
+labels: ["recipe"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share a recipe — your own combo of ClaudePet + other MCP server(s). If it's polished enough for the official `docs/recipes/`, open an issue with the `new-recipe` template and we'll PR it in.
+
+  - type: input
+    id: name
+    attributes:
+      label: Recipe name
+      placeholder: "Standup Heartbeat"
+
+  - type: textarea
+    id: other-mcp
+    attributes:
+      label: Other MCP(s) you paired with
+      placeholder: "Standup MCP (github.com/...), Calendar MCP, ..."
+
+  - type: textarea
+    id: loop
+    attributes:
+      label: The loop
+      placeholder: |
+        Trigger → tool calls → user-visible effect.
+        e.g. 9:55 → standup_status → empty? pet_say "今天还没写 standup" + dust ; full? sparkle + meow
+
+  - type: textarea
+    id: trigger
+    attributes:
+      label: Trigger phrase you tell Claude
+
+  - type: textarea
+    id: claude-config
+    attributes:
+      label: Claude Desktop config snippet (optional)
+      render: json

@@ -1,0 +1,32 @@
+title: "[Q&A] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ask anything — install issues, MCP wiring questions, how-to. For confirmed bugs, please use the [bug-report issue template](../../issues/new?template=bug-report.yml) instead.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version (if relevant)
+      placeholder: "14.5"
+
+  - type: input
+    id: claudepet
+    attributes:
+      label: ClaudePet version (if relevant)
+      placeholder: "v3.0.0"
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Optional, helps avoid back-and-forth

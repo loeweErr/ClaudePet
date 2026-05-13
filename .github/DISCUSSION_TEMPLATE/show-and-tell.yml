@@ -1,0 +1,30 @@
+title: "[Show & Tell] "
+labels: ["show-and-tell"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Built something on top of ClaudePet? Forked the MCP protocol to your own pet? Wrote a blog post? Show it off here.
+
+  - type: input
+    id: title
+    attributes:
+      label: What did you build?
+      placeholder: "A streamdeck integration that triggers pet_emote on stream events"
+    validations:
+      required: true
+
+  - type: textarea
+    id: link
+    attributes:
+      label: Link(s)
+      description: Repo, demo, blog post, video
+      placeholder: "https://github.com/you/your-project"
+    validations:
+      required: true
+
+  - type: textarea
+    id: blurb
+    attributes:
+      label: A few words
+      description: What does it do, what surprised you while building it

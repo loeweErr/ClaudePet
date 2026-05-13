@@ -219,6 +219,16 @@ ClaudePet/
 - Login at startup（手动 `~/Library/LaunchAgents` 可以）
 - 流式 / 多媒体回复展示
 
+## 社区
+
+- [Discussions](https://github.com/loeweErr/ClaudePet/discussions) 四个板块：
+  - **晒猫** —— 桌面截图、自定义皮肤、共度天数炫耀
+  - **Recipes** —— 分享你自己的 MCP 组合配方
+  - **Q&A** —— 安装、MCP 接线、用法
+  - **Show & Tell** —— 基于 ClaudePet 衍生的项目
+- 每周精选一条 Discussions 上 README 的 "Community Highlights"（评论里说想被精选就行）
+- Bug 和 feature 请求请走 [Issues](https://github.com/loeweErr/ClaudePet/issues)，模板会自动填好字段
+
 ## Credits
 
 - `Resources/meow.m4a` — 改编自 Wikimedia Commons "Meow of a Siamese cat - freemaster2.wav"（[link](https://commons.wikimedia.org/wiki/File:Meow_of_a_Siamese_cat_-_freemaster2.wav)），CC0/公有领域，原始 134KB WAV 经 `afconvert` 压成 15KB AAC

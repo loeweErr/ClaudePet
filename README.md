@@ -222,6 +222,16 @@ Drop a folder at `~/Library/Application Support/ClaudePet/skins/<id>/palette.jso
 - Launch at login (manual `~/Library/LaunchAgents` works)
 - Streaming / multimedia reply rendering
 
+## Community
+
+- [Discussions](https://github.com/loeweErr/ClaudePet/discussions) — four boards:
+  - **晒猫 (Show your cat)** — desktop screenshots, custom skins, day-counter brag
+  - **Recipes** — share your own MCP-combo recipes
+  - **Q&A** — installation, MCP wiring, how-to
+  - **Show & Tell** — projects built on top of ClaudePet
+- Weekly highlight from Discussions lands in the README's "Community Highlights" line below — opt-in by mentioning you'd like to be featured.
+- For bugs and feature requests, use [Issues](https://github.com/loeweErr/ClaudePet/issues) — templates pre-fill the right fields.
+
 ## Credits
 
 - `Resources/meow.m4a` — adapted from Wikimedia Commons "Meow of a Siamese cat - freemaster2.wav" ([link](https://commons.wikimedia.org/wiki/File:Meow_of_a_Siamese_cat_-_freemaster2.wav)), CC0/public domain, original 134KB WAV compressed via `afconvert` to 15KB AAC
