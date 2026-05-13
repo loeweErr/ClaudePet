@@ -34,6 +34,10 @@ Claude Desktop ──stdio JSON-RPC──> ClaudePet --mcp ──Unix socket─�
 ### Quickstart (recommended)
 
 ```bash
+# via Homebrew (after v3.0.0 release + the loeweErr/tap is published):
+brew install --cask loeweErr/tap/claude-pet
+
+# or via the install script (works today):
 curl -fsSL https://raw.githubusercontent.com/loeweErr/ClaudePet/main/install.sh | bash
 ```
 
