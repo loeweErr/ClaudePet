@@ -106,8 +106,14 @@ build_app() {
             x86_64) target="x86_64-apple-macos13" ;;
             *)      err "Unsupported arch: $arch" ;;
         esac
+        # AVFoundation: PetAudio (TTS + .m4a meow playback)
+        # ServiceManagement: SMAppService.mainApp (launch-at-login)
+        # Carbon: HotKeyManager (global Carbon hot keys)
+        # Swift's autolink usually picks these up via `import`, but listing
+        # them explicitly avoids surprises on toolchains where autolink misses.
         swiftc -O -target "$target" \
-            -framework AppKit -framework Foundation \
+            -framework AppKit -framework Foundation -framework AVFoundation \
+            -framework ServiceManagement -framework Carbon \
             -o "${APP_BUILD}/Contents/MacOS/${BIN_NAME}" \
             Sources/ClaudePet/*.swift
     fi
