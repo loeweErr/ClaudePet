@@ -2,6 +2,8 @@
 
 **English** | [中文](README.zh-CN.md)
 
+[![CI](https://github.com/loeweErr/ClaudePet/actions/workflows/ci.yml/badge.svg)](https://github.com/loeweErr/ClaudePet/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) ![macOS 13+](https://img.shields.io/badge/macOS-13%2B-blue)
+
 ![demo](docs/demo.gif)
 
 > _Recording in progress — see [`docs/demo-script.md`](docs/demo-script.md) for the storyboard. The placeholder above will resolve once `docs/demo.gif` is committed._

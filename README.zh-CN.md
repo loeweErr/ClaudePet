@@ -2,6 +2,8 @@
 
 [English](README.md) | **中文**
 
+[![CI](https://github.com/loeweErr/ClaudePet/actions/workflows/ci.yml/badge.svg)](https://github.com/loeweErr/ClaudePet/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) ![macOS 13+](https://img.shields.io/badge/macOS-13%2B-blue)
+
 ![demo](docs/demo.gif)
 
 > _Demo 录制脚本见 [`docs/demo-script.md`](docs/demo-script.md)；上面的占位会在 `docs/demo.gif` 提交后自动解决。_
