@@ -253,7 +253,7 @@ final class MCPServer {
 
 // MARK: - Tool definitions
 
-private enum Tools {
+enum Tools {
     static let names: Set<String> = [
         "pet_status", "pet_say", "pet_meow", "pet_feed", "pet_pet", "pet_play",
         "pet_wave", "pet_sleep", "pet_wake", "pet_emote",
