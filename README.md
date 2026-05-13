@@ -169,3 +169,7 @@ ClaudePet/
 ## Credits
 
 - `Resources/meow.m4a` — 改编自 Wikimedia Commons "Meow of a Siamese cat - freemaster2.wav"（[link](https://commons.wikimedia.org/wiki/File:Meow_of_a_Siamese_cat_-_freemaster2.wav)），CC0/公有领域，原始 134KB WAV 经 `afconvert` 压成 15KB AAC
+
+## License
+
+[MIT License](LICENSE) © 2026 loeweErr
