@@ -1,0 +1,75 @@
+name: New skin proposal
+description: Propose a new community skin (palette.json)
+title: "[skin] "
+labels: ["skin", "community"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Skins live in the separate [`claude-pet-skins`](https://github.com/loeweErr/claude-pet-skins) gallery repo, not this one — but you can use this issue to **propose** a skin and rally feedback before opening the PR.
+
+        If your skin is ready (you have `palette.json`), open the PR directly at https://github.com/loeweErr/claude-pet-skins/pulls instead.
+
+  - type: input
+    id: skin-id
+    attributes:
+      label: Proposed skin id
+      description: Lowercase, hyphens only, e.g. `sakura-cat`
+      placeholder: "twilight"
+    validations:
+      required: true
+
+  - type: input
+    id: skin-name
+    attributes:
+      label: Display name
+      placeholder: "Twilight"
+    validations:
+      required: true
+
+  - type: textarea
+    id: vibe
+    attributes:
+      label: Vibe / inspiration
+      description: One paragraph
+      placeholder: "Soft purple cat with green eyes. Inspired by the dusk sky in early summer."
+    validations:
+      required: true
+
+  - type: textarea
+    id: palette
+    attributes:
+      label: Palette colors (10 slots)
+      description: Hex codes for each — see [docs/creating-skins.md](../../docs/creating-skins.md)
+      placeholder: |
+        primary:      #7B68EE
+        primaryDark:  #5547B0
+        primaryLight: #A89AF0
+        belly:        #F4F0FF
+        cheek:        #FFB3C8
+        cheekDeep:    #D8849E
+        eye:          #180E08
+        highlight:    #FFFFFF
+        iris:         #5FCC58
+        accent:       #F8C124
+    validations:
+      required: true
+
+  - type: textarea
+    id: preview
+    attributes:
+      label: Preview screenshot (optional)
+      description: Drop a screenshot of the cat with your palette here — drag-drop works
+
+  - type: dropdown
+    id: license
+    attributes:
+      label: License you'd license the skin under
+      options:
+        - MIT
+        - CC0 (public domain)
+        - CC-BY-4.0
+        - CC-BY-SA-4.0
+        - Other (please specify in vibe)
+    validations:
+      required: true

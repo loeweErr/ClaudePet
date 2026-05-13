@@ -1,0 +1,54 @@
+name: New recipe proposal
+description: Pair ClaudePet with another MCP server in a useful new way
+title: "[recipe] "
+labels: ["recipe", "community"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Recipes show people what ClaudePet is for. Before opening: scan [`docs/recipes/`](../../docs/recipes/) — your idea might already be there in another form.
+
+  - type: input
+    id: recipe-name
+    attributes:
+      label: Recipe name
+      description: 2-4 words, evocative
+      placeholder: "Standup Heartbeat"
+    validations:
+      required: true
+
+  - type: input
+    id: other-mcp
+    attributes:
+      label: Other MCP server this pairs with
+      description: Link to its repo
+      placeholder: "https://github.com/some-org/standup-mcp"
+    validations:
+      required: true
+
+  - type: textarea
+    id: loop
+    attributes:
+      label: The loop
+      description: Trigger → tool calls → user-visible effect
+      placeholder: |
+        - Daily 09:55 → standup_mcp_status: pulls today's standup notes
+        - If notes are empty → pet_say "今天还没写 standup 喵?" + pet_emote dust count=4
+        - If notes complete → pet_emote sparkle count=8 + pet_meow "ya~"
+    validations:
+      required: true
+
+  - type: textarea
+    id: trigger-phrase
+    attributes:
+      label: One-shot trigger phrase to tell Claude
+      placeholder: "Every weekday at 9:55, check my standup MCP. If empty, mochi reminds me. If done, celebrate."
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Claude Desktop config snippet (optional)
+      description: If non-obvious — paste the `mcpServers.{your-mcp}` block
+      render: json

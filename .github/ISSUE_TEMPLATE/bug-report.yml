@@ -1,0 +1,88 @@
+name: Bug report
+description: Something is broken — the cat won't move, a tool crashes, the GUI hangs, etc.
+title: "[bug] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill out the sections below — short answers are fine.
+
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS version
+      description: e.g. 14.5 (Sonoma) — `sw_vers -productVersion`
+      placeholder: "14.5"
+    validations:
+      required: true
+
+  - type: input
+    id: claudepet-version
+    attributes:
+      label: ClaudePet version
+      description: From the menu bar ✦ menu, or `git log --oneline -1` if running from source
+      placeholder: "v3.0.0 or 9647825"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-source
+    attributes:
+      label: How did you install?
+      options:
+        - Homebrew (brew install --cask loeweErr/tap/claude-pet)
+        - install.sh (curl one-liner)
+        - Manual swiftc / swift run
+        - Built from source (Xcode)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A short description of the actual behavior
+      placeholder: "I called pet_feed and the cat moved to the bowl but didn't eat. The bowl appeared but no crumb particles."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      placeholder: "Cat eats with crumb particle effect, like in the demo gif."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Number them. The smaller the repro, the faster it gets fixed.
+      placeholder: |
+        1. Open Claude Desktop, fresh chat
+        2. Type "feed the cat"
+        3. Cat walks to bowl, then ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs (optional)
+      description: |
+        Useful sources:
+        - `log stream --process ClaudePet --level debug` while reproducing
+        - Claude Desktop's developer console
+        - `~/Library/Logs/...` if any
+      render: shell
+
+  - type: checkboxes
+    id: triage
+    attributes:
+      label: Triage
+      options:
+        - label: I checked open and closed issues for the same problem
+        - label: I'm running on a supported macOS (13+)

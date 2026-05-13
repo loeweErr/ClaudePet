@@ -1,0 +1,54 @@
+name: Feature request
+description: Propose a new tool, animation, recipe, or behavior
+title: "[feature] "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for thinking about ClaudePet's future. Before opening: scan [`docs/rfcs/`](../../docs/rfcs/) — your idea might already be there.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's the problem this solves?
+      description: Start from the user pain, not the feature. "I wish mochi could X" → "Today I can't Y, because Z."
+      placeholder: "Today I have to right-click → 切换皮肤 → click each skin to preview. I wish I could see them side-by-side."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Your proposed solution
+      description: Rough sketch is fine — UI, new MCP tool, new menu item, etc.
+      placeholder: "Add a 'Preview all skins' menu item that opens a small window showing 3-up thumbnails."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      placeholder: "Could also be inside the existing 切换皮肤 submenu, as hover previews — but submenus don't support arbitrary previews on macOS."
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - New MCP tool (`pet_*`)
+        - New pose / animation
+        - New menu / panel UI
+        - New skin or palette format
+        - New recipe (chain with other MCP)
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Mockups, links, references (optional)
+      description: Screenshots, sketches, links to similar features elsewhere

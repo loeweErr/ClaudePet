@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 浏览社区皮肤 / Browse community skins
+    url: https://github.com/loeweErr/claude-pet-skins
+    about: Skin contributions live in the gallery repo, not here.
+  - name: Q&A / Show & Tell
+    url: https://github.com/loeweErr/ClaudePet/discussions
+    about: Have a question or want to show off your setup? Use Discussions.
