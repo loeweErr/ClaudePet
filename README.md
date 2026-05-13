@@ -2,6 +2,10 @@
 
 **English** | [中文](README.zh-CN.md)
 
+![demo](docs/demo.gif)
+
+> _Recording in progress — see [`docs/demo-script.md`](docs/demo-script.md) for the storyboard. The placeholder above will resolve once `docs/demo.gif` is committed._
+
 A pixel cat that lives on your macOS desktop. **v3 is rebuilt as an MCP plugin for Claude Desktop** — you talk to Claude in Claude Desktop, and Claude drives the desktop cat through MCP tools. **No standalone API calls**, all authorization flows through Claude Desktop itself.
 
 > Different design intent from Codex pet: Codex pet is a workflow status bar with expressions, Claude pet is a desktop companion.

@@ -2,6 +2,10 @@
 
 [English](README.md) | **中文**
 
+![demo](docs/demo.gif)
+
+> _Demo 录制脚本见 [`docs/demo-script.md`](docs/demo-script.md)；上面的占位会在 `docs/demo.gif` 提交后自动解决。_
+
 一只活在你 macOS 桌面上的像素小猫。**v3 改造为 Claude Desktop 的 MCP 插件** —— 你在 Claude Desktop 里跟 Claude 说话，Claude 通过 MCP 工具操控桌面上的猫做出反应。**不再做任何独立的 API 调用**，授权完全走 Claude Desktop 自己。
 
 > 设计取向跟 Codex pet 不同：Codex pet 是带表情的工作流状态条，Claude pet 是桌面伙伴。
