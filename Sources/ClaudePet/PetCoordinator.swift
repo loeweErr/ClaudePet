@@ -33,6 +33,11 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         view.delegate = self
         menuBar.panel.delegate = self
 
+        // Restore the saved skin (falls back to mochi if the id is unknown,
+        // e.g. a community skin that was uninstalled).
+        SkinManager.shared.activate(id: self.state.skinId)
+        self.state.skinId = SkinManager.shared.active.id
+
         // Initial position
         placeInitial()
 
@@ -481,6 +486,30 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
 
         menu.addItem(NSMenuItem.separator())
 
+        // Switch Skin submenu
+        let skinItem = NSMenuItem(title: "切换皮肤", action: nil, keyEquivalent: "")
+        let skinSubmenu = NSMenu()
+        SkinManager.shared.reloadFromDisk()
+        let activeID = SkinManager.shared.active.id
+        for skin in SkinManager.shared.skins {
+            let prefix = skin.isBuiltIn ? "" : "· "
+            let item = NSMenuItem(title: "\(prefix)\(skin.displayName)",
+                                  action: #selector(menuSwitchSkin(_:)),
+                                  keyEquivalent: "")
+            item.target = self
+            item.representedObject = skin.id
+            if skin.id == activeID { item.state = .on }
+            skinSubmenu.addItem(item)
+        }
+        skinSubmenu.addItem(NSMenuItem.separator())
+        let openSkinDir = NSMenuItem(title: "打开社区皮肤文件夹…",
+                                     action: #selector(menuOpenSkinFolder),
+                                     keyEquivalent: "")
+        openSkinDir.target = self
+        skinSubmenu.addItem(openSkinDir)
+        skinItem.submenu = skinSubmenu
+        menu.addItem(skinItem)
+
         let renameItem = NSMenuItem(title: "改名…", action: #selector(menuRename), keyEquivalent: "")
         renameItem.target = self
         menu.addItem(renameItem)
@@ -544,6 +573,22 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
     @objc private func menuQuit() {
         state.save()
         NSApp.terminate(nil)
+    }
+
+    @objc private func menuSwitchSkin(_ sender: NSMenuItem) {
+        guard let id = sender.representedObject as? String else { return }
+        let active = SkinManager.shared.activate(id: id)
+        state.skinId = active.id
+        view.needsDisplay = true
+        say("\(active.displayName) ✦", duration: 1.6)
+        view.emit(.sparkle, count: 5, life: 1.2)
+        state.save()
+    }
+
+    @objc private func menuOpenSkinFolder() {
+        let dir = SkinManager.communityDir
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        NSWorkspace.shared.open(dir)
     }
 
     // MARK: - StatusPanelDelegate

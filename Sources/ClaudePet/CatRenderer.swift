@@ -8,17 +8,20 @@ enum CatPose {
 /// Coords use top-left origin (Y down) — view sets isFlipped = true.
 enum CatRenderer {
 
-    // ===== Color palette =====
-    static let orange      = NSColor(red: 0.91, green: 0.53, blue: 0.29, alpha: 1)
-    static let orangeDark  = NSColor(red: 0.72, green: 0.39, blue: 0.20, alpha: 1)
-    static let orangeLight = NSColor(red: 0.96, green: 0.73, blue: 0.48, alpha: 1)
-    static let cream       = NSColor(red: 1.00, green: 0.94, blue: 0.83, alpha: 1)
-    static let pink        = NSColor(red: 1.00, green: 0.62, blue: 0.78, alpha: 1)
-    static let pinkDeep    = NSColor(red: 0.85, green: 0.44, blue: 0.63, alpha: 1)
-    static let eye         = NSColor(red: 0.10, green: 0.06, blue: 0.03, alpha: 1)
-    static let white       = NSColor.white
-    static let irisGreen   = NSColor(red: 0.37, green: 0.79, blue: 0.31, alpha: 1)
-    static let gear        = NSColor(red: 0.98, green: 0.75, blue: 0.14, alpha: 1)
+    // ===== Color palette (sourced from the active skin) =====
+    // Names are kept (orange/cream/etc.) for legacy reasons even though the
+    // active skin may map them to non-orange / non-cream colors.
+    private static var p: CatPalette { SkinManager.shared.active.palette }
+    static var orange:      NSColor { p.primaryColor }
+    static var orangeDark:  NSColor { p.primaryDarkColor }
+    static var orangeLight: NSColor { p.primaryLightColor }
+    static var cream:       NSColor { p.bellyColor }
+    static var pink:        NSColor { p.cheekColor }
+    static var pinkDeep:    NSColor { p.cheekDeepColor }
+    static var eye:         NSColor { p.eyeColor }
+    static var white:       NSColor { p.highlightColor }
+    static var irisGreen:   NSColor { p.irisColor }
+    static var gear:        NSColor { p.accentColor }
 
     // ===== Geometry helpers =====
     /// Draw a filled rect in viewBox coords.

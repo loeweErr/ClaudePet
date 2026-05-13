@@ -185,9 +185,15 @@ ClaudePet/
     └── PetCoordinator.swift     # hub: state, animation, IPC handler
 ```
 
+## Skins
+
+The cat is drawn procedurally; a "skin" is a small `palette.json` mapping ten color slots. Three are bundled — **mochi** (orange tabby, default), **shadow** (black cat, amber eyes), **snow** (white cat, ice-blue eyes). Switch via right-click menu → **切换皮肤**.
+
+Drop a folder at `~/Library/Application Support/ClaudePet/skins/<id>/palette.json` to add your own. See [`docs/creating-skins.md`](docs/creating-skins.md) for the schema.
+
 ## Roadmap (Not in this release)
 
-- Multiple skins (reserved in v2 design, v3 still ships only the orange cat)
+- Spritesheet-based skins (current skins only swap colors, not shapes)
 - Remote voice replies (desktop has audio, but the WeChat outbound path has no voice channel)
 - Global hotkeys
 - Launch at login (manual `~/Library/LaunchAgents` works)

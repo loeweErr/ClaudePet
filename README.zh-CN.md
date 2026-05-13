@@ -182,9 +182,15 @@ ClaudePet/
     └── PetCoordinator.swift     # 中枢：状态、动画、IPC handler
 ```
 
+## 皮肤
+
+像素猫是程序化绘制，皮肤就是一个 `palette.json` 配色表（10 个色槽）。内置三套 —— **mochi**（橙色虎斑，默认）、**shadow**（黑猫，琥珀眼）、**snow**（白猫，冰蓝眼）。右键猫 → **切换皮肤** 即可切换。
+
+把一份 `palette.json` 丢到 `~/Library/Application Support/ClaudePet/skins/<id>/palette.json` 就能加自定义皮肤。格式见 [`docs/creating-skins.md`](docs/creating-skins.md)。
+
 ## 不在这一版里
 
-- 多种皮肤（v2 设计预留，v3 仍只有橙色猫）
+- 基于 spritesheet 的皮肤（当前皮肤只换配色，不换形状）
 - 远程语音回复（桌面有声，但微信 outbound 没接 voice 通道）
 - 全局热键
 - Login at startup（手动 `~/Library/LaunchAgents` 可以）

@@ -51,6 +51,9 @@ struct PetState: Codable {
     var lastGreetingDate: Date = Date.distantPast
     var shownMilestones: [Int] = []          // days at which milestones already celebrated
 
+    // v3.1: appearance
+    var skinId: String = "mochi"             // active skin id (built-in or community)
+
     var model: ClaudeModel {
         get { ClaudeModel(rawValue: modelRaw) ?? .sonnet }
         set { modelRaw = newValue.rawValue }
@@ -79,9 +82,24 @@ struct PetState: Codable {
     }
 
     static func load() -> PetState {
-        if let data = UserDefaults.standard.data(forKey: storageKey),
-           let s = try? JSONDecoder().decode(PetState.self, from: data) {
+        guard let data = UserDefaults.standard.data(forKey: storageKey) else {
+            return PetState()
+        }
+        if let s = try? JSONDecoder().decode(PetState.self, from: data) {
             return s
+        }
+        // Forward-compat migration: a new field was added since the user
+        // last saved. Fill missing top-level keys from a fresh default,
+        // then re-decode. Avoids losing mood / bond / days-together every
+        // time a property is appended to PetState.
+        if let saved = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
+           let defaultData = try? JSONEncoder().encode(PetState()),
+           var defaults = (try? JSONSerialization.jsonObject(with: defaultData)) as? [String: Any] {
+            for (k, v) in saved { defaults[k] = v }
+            if let merged = try? JSONSerialization.data(withJSONObject: defaults),
+               let s = try? JSONDecoder().decode(PetState.self, from: merged) {
+                return s
+            }
         }
         return PetState()
     }
