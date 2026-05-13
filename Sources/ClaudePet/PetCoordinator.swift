@@ -517,6 +517,11 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
                                      keyEquivalent: "")
         openSkinDir.target = self
         skinSubmenu.addItem(openSkinDir)
+        let browseCommunity = NSMenuItem(title: "浏览社区皮肤…",
+                                         action: #selector(menuBrowseCommunitySkins),
+                                         keyEquivalent: "")
+        browseCommunity.target = self
+        skinSubmenu.addItem(browseCommunity)
         skinItem.submenu = skinSubmenu
         menu.addItem(skinItem)
 
@@ -617,6 +622,12 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         let dir = SkinManager.communityDir
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         NSWorkspace.shared.open(dir)
+    }
+
+    @objc private func menuBrowseCommunitySkins() {
+        if let url = URL(string: "https://github.com/loeweErr/claude-pet-skins") {
+            NSWorkspace.shared.open(url)
+        }
     }
 
     // MARK: - Hot keys

@@ -1,0 +1,17 @@
+{
+  "displayName": "Example (twilight)",
+  "author": "claude-pet-skins maintainers",
+  "license": "MIT",
+  "colors": {
+    "primary":      "#7B68EE",
+    "primaryDark":  "#5547B0",
+    "primaryLight": "#A89AF0",
+    "belly":        "#F4F0FF",
+    "cheek":        "#FFB3C8",
+    "cheekDeep":    "#D8849E",
+    "eye":          "#180E08",
+    "highlight":    "#FFFFFF",
+    "iris":         "#5FCC58",
+    "accent":       "#F8C124"
+  }
+}

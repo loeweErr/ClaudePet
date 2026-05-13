@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/loeweErr/claude-pet-skins/main/schema.json",
+  "title": "ClaudePet community skin manifest",
+  "type": "object",
+  "required": ["colors"],
+  "additionalProperties": false,
+  "properties": {
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "author":  { "type": "string", "maxLength": 60 },
+    "license": { "type": "string", "maxLength": 60 },
+    "colors": {
+      "type": "object",
+      "required": [
+        "primary", "primaryDark", "primaryLight",
+        "belly", "cheek", "cheekDeep",
+        "eye", "highlight", "iris", "accent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "primary":      { "$ref": "#/definitions/hexColor" },
+        "primaryDark":  { "$ref": "#/definitions/hexColor" },
+        "primaryLight": { "$ref": "#/definitions/hexColor" },
+        "belly":        { "$ref": "#/definitions/hexColor" },
+        "cheek":        { "$ref": "#/definitions/hexColor" },
+        "cheekDeep":    { "$ref": "#/definitions/hexColor" },
+        "eye":          { "$ref": "#/definitions/hexColor" },
+        "highlight":    { "$ref": "#/definitions/hexColor" },
+        "iris":         { "$ref": "#/definitions/hexColor" },
+        "accent":       { "$ref": "#/definitions/hexColor" }
+      }
+    }
+  },
+  "definitions": {
+    "hexColor": {
+      "type": "string",
+      "pattern": "^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$"
+    }
+  }
+}
