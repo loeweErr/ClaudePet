@@ -1,0 +1,113 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+# A release run produces and uploads release assets — never run two at once.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    name: Build .app and publish release
+    runs-on: macos-14
+    permissions:
+      contents: write   # required by gh release create
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version from tag
+        id: version
+        run: |
+          ref="${GITHUB_REF##*/}"        # v3.0.0
+          version="${ref#v}"             # 3.0.0
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "ref=$ref"         >> "$GITHUB_OUTPUT"
+
+      - name: Build (release)
+        run: swift build -c release
+
+      - name: Test
+        run: swift test --parallel
+
+      - name: Assemble ClaudePet.app
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          app="ClaudePet.app"
+          mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
+          cp .build/release/ClaudePet "$app/Contents/MacOS/ClaudePet"
+          cp Resources/meow.m4a       "$app/Contents/Resources/meow.m4a"
+          cat > "$app/Contents/Info.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>CFBundleExecutable</key><string>ClaudePet</string>
+            <key>CFBundleIdentifier</key><string>com.local.ClaudePet</string>
+            <key>CFBundleName</key><string>ClaudePet</string>
+            <key>CFBundleVersion</key><string>${version}</string>
+            <key>CFBundleShortVersionString</key><string>${version}</string>
+            <key>LSUIElement</key><true/>
+            <key>LSMinimumSystemVersion</key><string>13.0</string>
+          </dict></plist>
+          PLIST
+
+      - name: Zip the .app
+        id: zip
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          zip_name="ClaudePet-v${version}.zip"
+          # ditto preserves macOS bundle metadata (extended attrs, symlinks).
+          ditto -c -k --sequesterRsrc --keepParent "ClaudePet.app" "$zip_name"
+          shasum -a 256 "$zip_name" | tee "${zip_name}.sha256"
+          echo "zip=$zip_name" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          ref="${{ steps.version.outputs.ref }}"
+          zip="${{ steps.zip.outputs.zip }}"
+          notes_file="$(mktemp)"
+          cat > "$notes_file" <<EOF
+          # ClaudePet v${version}
+
+          A pixel cat that lives on your macOS desktop, controlled by Claude Desktop via MCP.
+
+          ## Install (one-liner)
+
+          \`\`\`bash
+          curl -fsSL https://raw.githubusercontent.com/loeweErr/ClaudePet/main/install.sh | bash
+          \`\`\`
+
+          ## Or download
+
+          1. Download \`${zip}\` below.
+          2. Unzip and move \`ClaudePet.app\` to \`/Applications\`.
+          3. Register the MCP server in \`~/Library/Application Support/Claude/claude_desktop_config.json\`:
+             \`\`\`json
+             {
+               "mcpServers": {
+                 "claude-pet": {
+                   "command": "/Applications/ClaudePet.app/Contents/MacOS/ClaudePet",
+                   "args": ["--mcp"]
+                 }
+               }
+             }
+             \`\`\`
+          4. Quit Claude Desktop (Cmd+Q) and reopen.
+
+          ## SHA-256
+
+          See \`${zip}.sha256\` below.
+          EOF
+          gh release create "$ref" \
+            --title "ClaudePet v${version}" \
+            --notes-file "$notes_file" \
+            "${zip}" "${zip}.sha256"
