@@ -11,6 +11,7 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
     private var statusMode: StatusMode = .idle
     private let ipcServer = IPCServer()
     private let audio = PetAudio()
+    private let hotKeys = HotKeyManager()
 
     // Timers
     private var taskTimers: [Timer] = []
@@ -67,6 +68,10 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         // Start IPC for MCP plugin bridge
         ipcServer.handler = self
         ipcServer.start()
+
+        // Global hot keys (⌃⌥P summon, ⌃⌥H toggle, ⌃⌥F feed)
+        hotKeys.onAction = { [weak self] action in self?.handleHotKey(action) }
+        if self.state.hotkeysEnabled { hotKeys.enable() }
 
         refreshPanel()
     }
@@ -518,6 +523,15 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         centerItem.target = self
         menu.addItem(centerItem)
 
+        // Global hot keys toggle
+        let hotkeyItem = NSMenuItem(
+            title: "全局热键 (⌃⌥⌘P 召唤 / ⌃⌥H 收起 / ⌃⌥F 喂)",
+            action: #selector(menuToggleHotKeys),
+            keyEquivalent: "")
+        hotkeyItem.target = self
+        hotkeyItem.state = state.hotkeysEnabled ? .on : .off
+        menu.addItem(hotkeyItem)
+
         menu.addItem(NSMenuItem.separator())
 
         let resetItem = NSMenuItem(title: "重置位置", action: #selector(menuReset), keyEquivalent: "")
@@ -589,6 +603,44 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         let dir = SkinManager.communityDir
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         NSWorkspace.shared.open(dir)
+    }
+
+    // MARK: - Hot keys
+
+    private func handleHotKey(_ action: HotKeyManager.Action) {
+        switch action {
+        case .summon:
+            let mouse = NSEvent.mouseLocation
+            // mouseLocation is in screen coords (bottom-left origin),
+            // PetWindow.setFrameOrigin uses the same convention.
+            let size = PetView.viewSize
+            let target = NSPoint(x: mouse.x - size.width / 2,
+                                 y: mouse.y - size.height / 2)
+            window.animateOrigin(to: target, duration: 0.35)
+            savePosition()
+            view.emit(.sparkle, count: 5, life: 1.0)
+            say("到啦~ ฅ", duration: 1.4)
+        case .toggle:
+            if window.isVisible {
+                window.orderOut(nil)
+            } else {
+                window.orderFrontRegardless()
+            }
+        case .feed:
+            feed()
+        }
+    }
+
+    @objc private func menuToggleHotKeys() {
+        state.hotkeysEnabled.toggle()
+        if state.hotkeysEnabled {
+            hotKeys.enable()
+            say("热键已启用", duration: 1.4)
+        } else {
+            hotKeys.disable()
+            say("热键已禁用", duration: 1.4)
+        }
+        state.save()
     }
 
     // MARK: - StatusPanelDelegate

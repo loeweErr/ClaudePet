@@ -12,6 +12,8 @@ final class PetStateTests: XCTestCase {
         XCTAssertEqual(s.modelRaw, ClaudeModel.sonnet.rawValue)
         XCTAssertEqual(s.totalMsgs, 0)
         XCTAssertEqual(s.shownMilestones, [])
+        XCTAssertEqual(s.skinId, "mochi")
+        XCTAssertTrue(s.hotkeysEnabled)
     }
 
     func testDefaultMoodIsHealthy() {
