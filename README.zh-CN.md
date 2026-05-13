@@ -8,6 +8,8 @@
 
 > _Demo 录制脚本见 [`docs/demo-script.md`](docs/demo-script.md)；上面的占位会在 `docs/demo.gif` 提交后自动解决。_
 
+![hero](docs/screenshots/hero.png)
+
 一只活在你 macOS 桌面上的像素小猫。**v3 改造为 Claude Desktop 的 MCP 插件** —— 你在 Claude Desktop 里跟 Claude 说话，Claude 通过 MCP 工具操控桌面上的猫做出反应。**不再做任何独立的 API 调用**，授权完全走 Claude Desktop 自己。
 
 > 设计取向跟 Codex pet 不同：Codex pet 是带表情的工作流状态条，Claude pet 是桌面伙伴。
@@ -88,7 +90,9 @@ EOF
 }
 ```
 
-然后**完全退出**（Cmd+Q）并重启 Claude Desktop。在对话里 Claude 就能看到 9 个 `pet_*` 工具。
+然后**完全退出**（Cmd+Q）并重启 Claude Desktop。在对话里 Claude 就能看到 10 个 `pet_*` 工具。
+
+![claude-desktop](docs/screenshots/claude-desktop.png)
 
 GUI 进程如果没在跑，第一次 MCP 调用会自动 `open ClaudePet.app` 拉起来（等待最多 8 秒）。
 
@@ -183,6 +187,8 @@ ClaudePet/
 ```
 
 ## 皮肤
+
+![skins](docs/screenshots/skins.png)
 
 像素猫是程序化绘制，皮肤就是一个 `palette.json` 配色表（10 个色槽）。内置三套 —— **mochi**（橙色虎斑，默认）、**shadow**（黑猫，琥珀眼）、**snow**（白猫，冰蓝眼）。右键猫 → **切换皮肤** 即可切换。
 

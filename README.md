@@ -8,6 +8,8 @@
 
 > _Recording in progress — see [`docs/demo-script.md`](docs/demo-script.md) for the storyboard. The placeholder above will resolve once `docs/demo.gif` is committed._
 
+![hero](docs/screenshots/hero.png)
+
 A pixel cat that lives on your macOS desktop. **v3 is rebuilt as an MCP plugin for Claude Desktop** — you talk to Claude in Claude Desktop, and Claude drives the desktop cat through MCP tools. **No standalone API calls**, all authorization flows through Claude Desktop itself.
 
 > Different design intent from Codex pet: Codex pet is a workflow status bar with expressions, Claude pet is a desktop companion.
@@ -88,7 +90,9 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` and add:
 }
 ```
 
-Then **fully quit** (Cmd+Q) and restart Claude Desktop. In any conversation Claude will now see 9 `pet_*` tools.
+Then **fully quit** (Cmd+Q) and restart Claude Desktop. In any conversation Claude will now see 10 `pet_*` tools.
+
+![claude-desktop](docs/screenshots/claude-desktop.png)
 
 If the GUI process is not running, the first MCP call will auto-launch it via `open ClaudePet.app` (waits up to 8 seconds).
 
@@ -186,6 +190,8 @@ ClaudePet/
 ```
 
 ## Skins
+
+![skins](docs/screenshots/skins.png)
 
 The cat is drawn procedurally; a "skin" is a small `palette.json` mapping ten color slots. Three are bundled — **mochi** (orange tabby, default), **shadow** (black cat, amber eyes), **snow** (white cat, ice-blue eyes). Switch via right-click menu → **切换皮肤**.
 
