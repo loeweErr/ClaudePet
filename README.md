@@ -29,6 +29,18 @@ Claude Desktop ──stdio JSON-RPC──> ClaudePet --mcp ──Unix socket─�
 
 ## Build
 
+### Quickstart (recommended)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/loeweErr/ClaudePet/main/install.sh | bash
+```
+
+The installer detects your toolchain (full Xcode vs CommandLineTools-only), builds `ClaudePet.app`, installs it (default `/Applications/ClaudePet.app`), and registers the `claude-pet` MCP server in `~/Library/Application Support/Claude/claude_desktop_config.json` — preserving any existing servers (a timestamped `.bak` is kept beside the original).
+
+After it finishes, **fully quit Claude Desktop (Cmd+Q) and reopen it.** Then say "feed the cat" in any conversation.
+
+### Manual build
+
 ```bash
 # On a CommandLineTools-only machine (missing Platforms/), `swift build` won't run;
 # bypass SwiftPM with swiftc directly:
