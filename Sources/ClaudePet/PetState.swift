@@ -56,6 +56,12 @@ struct PetState: Codable {
     var hotkeysEnabled: Bool = true          // global ⌃⌥P/H/F bindings
     var launchAtLogin: Bool = false          // SMAppService.mainApp registration
 
+    // v3.2: personality
+    var personalityId: String = "default"    // matches Personality.presets ids or "custom"
+    var customSystemPrompt: String = ""      // user-edited prompt, used when personalityId == "custom"
+    var replyCharLimit: Int = 40             // bubble + TTS truncation cap
+    var ttsEnabled: Bool = true              // global gate on say()'s voice path
+
     var model: ClaudeModel {
         get { ClaudeModel(rawValue: modelRaw) ?? .sonnet }
         set { modelRaw = newValue.rawValue }

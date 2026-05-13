@@ -202,6 +202,10 @@ The cat is most useful when wired up to other MCP servers. A few starter combos:
 
 Each recipe doc has a copy-pasteable `claude_desktop_config.json` and a trigger phrase you say to Claude once.
 
+## Personality
+
+Right-click the cat → **人格…** to switch presets (default / tsundere / clingy / elder / anime), edit the system prompt, change the reply character cap, or mute TTS. Saved settings export to `~/Library/Application Support/ClaudePet/personality.json` — the WeChat bridge can read the prompt from there (see [`docs/personality.md`](docs/personality.md) for the one-time manual sync).
+
 ## Skins
 
 ![skins](docs/screenshots/skins.png)

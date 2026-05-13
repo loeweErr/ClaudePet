@@ -199,6 +199,10 @@ ClaudePet/
 
 每个配方文档都有可直接复制的 `claude_desktop_config.json` 和一句"对 Claude 说一次就够"的触发指令。
 
+## 人格
+
+右键猫 → **人格…** 切换预设（default / 傲娇 / 粘人 / 老干部 / 二次元）、编辑系统 prompt、调字数上限、关 TTS。设置写到 `~/Library/Application Support/ClaudePet/personality.json` —— 微信桥可以从那里读 prompt（一次性手动同步步骤见 [`docs/personality.md`](docs/personality.md)）。
+
 ## 皮肤
 
 ![skins](docs/screenshots/skins.png)

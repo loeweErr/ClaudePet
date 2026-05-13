@@ -139,13 +139,20 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
     // MARK: - Speech bubble
 
     private func say(_ text: String, duration: TimeInterval = 2.2, voice: Bool = true) {
-        view.bubbleText = text
+        // Personality cap: hard-truncate long bubbles so the chosen persona
+        // limit holds even for tools that pass arbitrary text.
+        let limit = max(10, state.replyCharLimit)
+        let bubble: String = text.count > limit
+            ? String(text.prefix(limit - 1)) + "…"
+            : text
+        view.bubbleText = bubble
         bubbleClearTimer?.invalidate()
         bubbleClearTimer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
             self?.view.bubbleText = nil
         }
-        if voice {
-            audio.speak(text, catty: true)
+        // Global TTS gate (per personality setting).
+        if voice && state.ttsEnabled {
+            audio.speak(bubble, catty: true)
         }
     }
 
@@ -431,6 +438,152 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         }
     }
 
+    // MARK: - Personality sheet
+
+    private func openPersonality() {
+        let alert = NSAlert()
+        alert.messageText = "人格 (Personality)"
+        alert.informativeText = """
+        预设决定 mochi 的说话风格。回复字数上限会截断气泡 + TTS。\
+        ClaudePet 不会自动改 Claude Desktop 的 plist —— 想在微信桥里复用，请把下方系统 prompt 复制到 launchd plist 的 CLAUDE_SYSTEM_PROMPT。
+        """
+        alert.addButton(withTitle: "保存")
+        alert.addButton(withTitle: "取消")
+
+        let width: CGFloat = 460
+        let stack = NSStackView(frame: NSRect(x: 0, y: 0, width: width, height: 340))
+        stack.orientation = .vertical
+        stack.alignment = .leading
+        stack.spacing = 8
+
+        // Preset popup
+        let presetRow = NSStackView()
+        presetRow.orientation = .horizontal
+        presetRow.spacing = 8
+        presetRow.addArrangedSubview(NSTextField(labelWithString: "预设"))
+        let presetPopup = NSPopUpButton()
+        for p in Personality.presets {
+            presetPopup.addItem(withTitle: p.displayName)
+            presetPopup.lastItem?.representedObject = p.id
+        }
+        presetPopup.addItem(withTitle: "自定义 (custom)")
+        presetPopup.lastItem?.representedObject = Personality.customId
+        // Select current
+        if let idx = (Personality.presets.map { $0.id } + [Personality.customId])
+                       .firstIndex(of: state.personalityId) {
+            presetPopup.selectItem(at: idx)
+        }
+        presetRow.addArrangedSubview(presetPopup)
+        stack.addArrangedSubview(presetRow)
+
+        // System prompt textarea
+        stack.addArrangedSubview(NSTextField(labelWithString: "系统 prompt（cat 人格）"))
+        let scroll = NSScrollView(frame: NSRect(x: 0, y: 0, width: width, height: 160))
+        scroll.hasVerticalScroller = true
+        scroll.borderType = .bezelBorder
+        let textView = NSTextView(frame: scroll.bounds)
+        textView.isRichText = false
+        textView.font = NSFont.monospacedSystemFont(ofSize: 11, weight: .regular)
+        textView.isAutomaticQuoteSubstitutionEnabled = false
+        textView.isAutomaticDashSubstitutionEnabled = false
+        let initialPrompt: String = {
+            if state.personalityId == Personality.customId { return state.customSystemPrompt }
+            return Personality.preset(id: state.personalityId)?.systemPrompt ?? Personality.default_.systemPrompt
+        }()
+        textView.string = initialPrompt
+        scroll.documentView = textView
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.heightAnchor.constraint(equalToConstant: 160).isActive = true
+        scroll.widthAnchor.constraint(equalToConstant: width).isActive = true
+        stack.addArrangedSubview(scroll)
+
+        // Switching preset updates the textarea (only if the user hasn't
+        // already edited away). For minimal surprise, always replace on
+        // preset pick — explicit Save commits.
+        let presetTarget = PresetClickRelay { newId in
+            if newId == Personality.customId {
+                textView.string = self.state.customSystemPrompt.isEmpty
+                    ? Personality.default_.systemPrompt
+                    : self.state.customSystemPrompt
+            } else if let p = Personality.preset(id: newId) {
+                textView.string = p.systemPrompt
+            }
+        }
+        presetPopup.target = presetTarget
+        presetPopup.action = #selector(PresetClickRelay.popupChanged(_:))
+        // Keep relay alive for the lifetime of the alert.
+        objc_setAssociatedObject(presetPopup, &Self.relayKey, presetTarget, .OBJC_ASSOCIATION_RETAIN)
+
+        // Reply char limit
+        let limitRow = NSStackView()
+        limitRow.orientation = .horizontal
+        limitRow.spacing = 8
+        limitRow.addArrangedSubview(NSTextField(labelWithString: "回复字数上限"))
+        let limitStepper = NSStepper()
+        limitStepper.minValue = 10
+        limitStepper.maxValue = 200
+        limitStepper.increment = 5
+        limitStepper.integerValue = state.replyCharLimit
+        let limitLabel = NSTextField(labelWithString: "\(state.replyCharLimit)")
+        limitLabel.alignment = .right
+        limitLabel.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        let limitRelay = StepperClickRelay { value in
+            limitLabel.stringValue = "\(value)"
+        }
+        limitStepper.target = limitRelay
+        limitStepper.action = #selector(StepperClickRelay.stepperChanged(_:))
+        objc_setAssociatedObject(limitStepper, &Self.relayKey, limitRelay, .OBJC_ASSOCIATION_RETAIN)
+        limitRow.addArrangedSubview(limitStepper)
+        limitRow.addArrangedSubview(limitLabel)
+        stack.addArrangedSubview(limitRow)
+
+        // TTS checkbox
+        let ttsCheck = NSButton(checkboxWithTitle: "启用 TTS（让猫说话）",
+                                target: nil, action: nil)
+        ttsCheck.state = state.ttsEnabled ? .on : .off
+        stack.addArrangedSubview(ttsCheck)
+
+        alert.accessoryView = stack
+
+        let resp = alert.runModal()
+        guard resp == .alertFirstButtonReturn else { return }
+
+        // Persist
+        let newPresetId = (presetPopup.selectedItem?.representedObject as? String)
+            ?? Personality.customId
+        let newPrompt = textView.string
+        let newLimit = limitStepper.integerValue
+        let newTTS = (ttsCheck.state == .on)
+
+        state.personalityId = newPresetId
+        state.replyCharLimit = max(10, newLimit)
+        state.ttsEnabled = newTTS
+
+        // If the textarea differs from the preset's canonical prompt, treat
+        // the result as "custom" — the user clearly meant to override.
+        if newPresetId == Personality.customId
+           || Personality.preset(id: newPresetId)?.systemPrompt != newPrompt {
+            state.personalityId = Personality.customId
+            state.customSystemPrompt = newPrompt
+        }
+        state.save()
+
+        // Export to personality.json for the WeChat bridge / external tools.
+        let effectivePrompt: String = state.personalityId == Personality.customId
+            ? state.customSystemPrompt
+            : (Personality.preset(id: state.personalityId)?.systemPrompt ?? newPrompt)
+        PersonalityFile(
+            presetId: state.personalityId,
+            systemPrompt: effectivePrompt,
+            replyCharLimit: state.replyCharLimit,
+            ttsEnabled: state.ttsEnabled
+        ).save()
+
+        say("人格已更新 ✦", duration: 1.6)
+    }
+
+    private static var relayKey: UInt8 = 0
+
     // MARK: - Rename modal
 
     private func openRename() {
@@ -529,6 +682,12 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         renameItem.target = self
         menu.addItem(renameItem)
 
+        let personalityItem = NSMenuItem(title: "人格…",
+                                         action: #selector(menuPersonality),
+                                         keyEquivalent: "")
+        personalityItem.target = self
+        menu.addItem(personalityItem)
+
         let centerItem = NSMenuItem(title: "居中", action: #selector(menuCenter), keyEquivalent: "")
         centerItem.target = self
         menu.addItem(centerItem)
@@ -581,6 +740,7 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
     @objc private func menuSleep() { if view.pose == .sleep { wake() } else { sleep() } }
     @objc private func menuTask() { runTask() }
     @objc private func menuRename() { openRename() }
+    @objc private func menuPersonality() { openPersonality() }
     @objc private func menuCenter() {
         guard let s = NSScreen.main else { return }
         let f = s.visibleFrame
@@ -819,5 +979,33 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         case .eat:   return "eat"
         case .play:  return "play"
         }
+    }
+}
+
+// MARK: - Action relays for the personality sheet
+
+/// Bridges an NSPopUpButton's target/action to a Swift closure. The relay
+/// must outlive the alert; PetCoordinator keeps a strong reference via
+/// objc_setAssociatedObject.
+private final class PresetClickRelay: NSObject {
+    private let onChange: (String) -> Void
+    init(_ onChange: @escaping (String) -> Void) {
+        self.onChange = onChange
+        super.init()
+    }
+    @objc func popupChanged(_ sender: NSPopUpButton) {
+        guard let id = sender.selectedItem?.representedObject as? String else { return }
+        onChange(id)
+    }
+}
+
+private final class StepperClickRelay: NSObject {
+    private let onChange: (Int) -> Void
+    init(_ onChange: @escaping (Int) -> Void) {
+        self.onChange = onChange
+        super.init()
+    }
+    @objc func stepperChanged(_ sender: NSStepper) {
+        onChange(sender.integerValue)
     }
 }
