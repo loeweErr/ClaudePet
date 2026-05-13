@@ -54,6 +54,7 @@ struct PetState: Codable {
     // v3.1: appearance
     var skinId: String = "mochi"             // active skin id (built-in or community)
     var hotkeysEnabled: Bool = true          // global ⌃⌥P/H/F bindings
+    var launchAtLogin: Bool = false          // SMAppService.mainApp registration
 
     var model: ClaudeModel {
         get { ClaudeModel(rawValue: modelRaw) ?? .sonnet }

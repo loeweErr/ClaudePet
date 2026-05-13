@@ -14,6 +14,7 @@ final class PetStateTests: XCTestCase {
         XCTAssertEqual(s.shownMilestones, [])
         XCTAssertEqual(s.skinId, "mochi")
         XCTAssertTrue(s.hotkeysEnabled)
+        XCTAssertFalse(s.launchAtLogin)
     }
 
     func testDefaultMoodIsHealthy() {

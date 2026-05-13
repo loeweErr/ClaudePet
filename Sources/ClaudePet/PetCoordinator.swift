@@ -1,4 +1,5 @@
 import AppKit
+import ServiceManagement
 
 /// Central brain. Owns state, animates the pet, runs task workflows,
 /// and wires events between the cat view, status panel, and menubar.
@@ -72,6 +73,10 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         // Global hot keys (⌃⌥P summon, ⌃⌥H toggle, ⌃⌥F feed)
         hotKeys.onAction = { [weak self] action in self?.handleHotKey(action) }
         if self.state.hotkeysEnabled { hotKeys.enable() }
+
+        // Apply persisted launch-at-login preference. SMAppService is
+        // idempotent so re-applying on every launch is safe.
+        applyLaunchAtLogin()
 
         refreshPanel()
     }
@@ -532,6 +537,15 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
         hotkeyItem.state = state.hotkeysEnabled ? .on : .off
         menu.addItem(hotkeyItem)
 
+        // Launch at login toggle
+        let loginItem = NSMenuItem(
+            title: "开机自启",
+            action: #selector(menuToggleLaunchAtLogin),
+            keyEquivalent: "")
+        loginItem.target = self
+        loginItem.state = state.launchAtLogin ? .on : .off
+        menu.addItem(loginItem)
+
         menu.addItem(NSMenuItem.separator())
 
         let resetItem = NSMenuItem(title: "重置位置", action: #selector(menuReset), keyEquivalent: "")
@@ -641,6 +655,40 @@ final class PetCoordinator: NSObject, PetViewDelegate, StatusPanelDelegate, IPCR
             say("热键已禁用", duration: 1.4)
         }
         state.save()
+    }
+
+    // MARK: - Launch at login
+
+    private func applyLaunchAtLogin() {
+        if state.launchAtLogin {
+            try? SMAppService.mainApp.register()
+        } else {
+            try? SMAppService.mainApp.unregister()
+        }
+    }
+
+    @objc private func menuToggleLaunchAtLogin() {
+        let willEnable = !state.launchAtLogin
+        do {
+            if willEnable {
+                try SMAppService.mainApp.register()
+                state.launchAtLogin = true
+                // First-enable explanation (the menu item is the only entry
+                // point, so the first toggle on each install is "first time").
+                say("这样早上开机就能看到我啦 ฅ^•ﻌ•^ฅ", duration: 3.0)
+                view.emit(.heart, count: 4, life: 1.4)
+            } else {
+                try SMAppService.mainApp.unregister()
+                state.launchAtLogin = false
+                say("不再开机自启 zzz", duration: 1.6)
+            }
+            state.save()
+        } catch {
+            say("开机自启切换失败 (>_<)", duration: 2.0)
+            FileHandle.standardError.write(Data(
+                "[launch] \(willEnable ? "register" : "unregister") failed: \(error)\n".utf8
+            ))
+        }
     }
 
     // MARK: - StatusPanelDelegate
