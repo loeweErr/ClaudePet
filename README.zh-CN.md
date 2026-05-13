@@ -186,6 +186,19 @@ ClaudePet/
     └── PetCoordinator.swift     # 中枢：状态、动画、IPC handler
 ```
 
+## 配方（Recipes）
+
+把 ClaudePet 跟别的 MCP server 串起来，价值最大。几个起手式：
+
+| 配方 | 需要另一个 MCP | 效果 |
+|---|---|---|
+| [专注守护](docs/recipes/focus-guard.md) | 番茄钟 MCP | 番茄钟开始时猫睡觉，结束时撒 sparkle |
+| [日历提醒](docs/recipes/calendar-reminder.md) | Google Calendar / AppleScript MCP | 会议前 5 分钟猫提醒你 |
+| [VIP 邮件警报](docs/recipes/email-alert.md) | Gmail / IMAP MCP | 只对 VIP 邮件反应 |
+| [Git 庆祝](docs/recipes/git-celebration.md) | GitHub MCP | merge 撒 sparkle，CI 红了撒 dust |
+
+每个配方文档都有可直接复制的 `claude_desktop_config.json` 和一句"对 Claude 说一次就够"的触发指令。
+
 ## 皮肤
 
 ![skins](docs/screenshots/skins.png)

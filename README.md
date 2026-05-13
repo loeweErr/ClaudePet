@@ -189,6 +189,19 @@ ClaudePet/
     └── PetCoordinator.swift     # hub: state, animation, IPC handler
 ```
 
+## Recipes
+
+The cat is most useful when wired up to other MCP servers. A few starter combos:
+
+| Recipe | Other MCP needed | What happens |
+|---|---|---|
+| [Focus Guard](docs/recipes/focus-guard.md) | a Pomodoro / timer MCP | Cat sleeps during focus blocks, sparkles at the end |
+| [Calendar Reminder](docs/recipes/calendar-reminder.md) | Google Calendar / AppleScript MCP | Cat warns you 5 min before each meeting |
+| [VIP Email Alert](docs/recipes/email-alert.md) | Gmail / IMAP MCP | Cat reacts only to your VIPs' emails |
+| [Git Celebration](docs/recipes/git-celebration.md) | GitHub MCP | Sparkles on merge, dust on red CI |
+
+Each recipe doc has a copy-pasteable `claude_desktop_config.json` and a trigger phrase you say to Claude once.
+
 ## Skins
 
 ![skins](docs/screenshots/skins.png)
