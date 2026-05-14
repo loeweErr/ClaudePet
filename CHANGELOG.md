@@ -10,6 +10,12 @@ git cliff -o CHANGELOG.md
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [3.0.0] — 2026-05-13
+
+ClaudePet rebuilt as a Claude Desktop MCP plugin. First public release.
+
 ### Added
 
 - **Multi-skin system** (palette JSON). Three bundled — `mochi` (orange, default), `shadow` (black, amber eyes), `snow` (white, ice-blue eyes). Community skins drop into `~/Library/Application Support/ClaudePet/skins/<id>/palette.json`. Switch via right-click menu → 切换皮肤.
@@ -42,6 +48,4 @@ git cliff -o CHANGELOG.md
 - `docs/rfcs/` — long-term direction notes.
 - `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, issue / PR templates.
 
-## [3.0.0] — Pending first release
-
-ClaudePet v3 was rebuilt as a Claude Desktop MCP plugin. Items listed under **Unreleased** above will roll into the v3.0.0 release notes when the tag is cut.
+[3.0.0]: https://github.com/loeweErr/ClaudePet/releases/tag/v3.0.0
