@@ -16,7 +16,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-14]
+        # macOS deployment target stays macOS 13 (set in Package.swift +
+        # Info.plist). The runner just needs to be ≥ 13 with full Xcode.
+        # GitHub's macos-13 runner pool is being retired and queues for
+        # 30+ min — macos-14 covers the same Swift toolchain and SDK on
+        # Apple Silicon, so a single-row matrix is enough.
+        os: [macos-14]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
