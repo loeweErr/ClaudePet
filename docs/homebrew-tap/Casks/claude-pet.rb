@@ -1,8 +1,6 @@
 cask "claude-pet" do
   version "3.0.0"
-  # Replace this with the SHA-256 emitted by the release workflow
-  # (see ClaudePet-v#{version}.zip.sha256 in the GitHub release assets).
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+  sha256 "8187cc45a925069f8d7cf5c7e50000f4e93d5eab2226847433c661ab7fb4c43e"
 
   url      "https://github.com/loeweErr/ClaudePet/releases/download/v#{version}/ClaudePet-v#{version}.zip"
   name     "Claude Pet"
